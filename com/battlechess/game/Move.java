@@ -13,5 +13,6 @@ public class Move{
         this.afterCords = afterCords;
         this.pieceType = pieceType;
         this.isCapture = isCapture;
+        this.isCheck = isCheck;
     }
 }

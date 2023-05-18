@@ -135,13 +135,20 @@ public class ChessGameGUI extends JFrame {
         }
         if(stateSelected){
             for(Coordinates c: possibleMoves){
-                ImageView imageView = new ImageView("./images/circle.png");
-                squares[8-c.row][c.column-1].add(imageView);
+                //ImageView imageView = new ImageView("./images/circle.png");
+                squares[8-c.row][c.column-1].setBackground(new Color(56, 143, 79, 100));
             }
-            squares[8-selectedPieceCords.row][selectedPieceCords.column-1].getComponent(0).setBackground(new Color(242, 48, 68, 150));
+            squares[8-selectedPieceCords.row][selectedPieceCords.column-1].getComponent(0).setBackground(new Color(245, 228, 98, 150));
         }
         movesTextArea.setText(GameState.movesToString(gameState.moves));
-        
+        if(gameState.moves.size() > 0 && gameState.moves.get(gameState.moves.size()-1).isCheck){
+            for(Piece piece: gameState.pieces){
+                if(piece.getPieceName() == "KING" && piece.isWhite() == gameState.isWhiteToMove){
+                    squares[8-piece.getRow()][piece.getColumn()-1].getComponent(0).setBackground(new Color(242, 48, 68, 150));
+                    break;
+                }
+            }
+        }
         //revalidate();
         repaint();
     }

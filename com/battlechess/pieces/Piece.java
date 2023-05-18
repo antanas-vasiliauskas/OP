@@ -71,7 +71,6 @@ abstract public class Piece implements Cloneable{
     public boolean move(Coordinates moveTo, GameState gameState){
         
         boolean isCapture = false;
-        boolean isCheck = GameState.isInCheck(this, moveTo, gameState);
         gameState.isWhiteToMove = !gameState.isWhiteToMove;
         Piece p = getPieceOnSquare(moveTo, gameState);
         if(p != null){
@@ -94,9 +93,11 @@ abstract public class Piece implements Cloneable{
             Coordinates coo = gameState.moves.get(gameState.moves.size() - 2).afterCords;
             gameState.pieces.remove(getPieceOnSquare(coo, gameState));
         }
-        gameState.moves.add(new Move(new Coordinates(getRow(), getColumn()), moveTo, getPieceName(), isCapture, isCheck));
+        int tempRow = getRow();
+        int tempColumn = getColumn();
         setRow(moveTo.row);
         setColumn(moveTo.column);
+        gameState.moves.add(new Move(new Coordinates(tempRow, tempColumn), moveTo, getPieceName(), isCapture, GameState.isInCheck(gameState)));
         return true;
     }    
     
