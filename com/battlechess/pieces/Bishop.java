@@ -1,31 +1,26 @@
-package battlechess.pieces;
+package pieces;
 
 import java.util.ArrayList;
+import game.GameState;
 
 public class Bishop extends Piece {
-    @Override
-    public boolean move(int newColumn, int newRow, ArrayList<Piece> pieces) {
-        if(!super.move(newColumn, newRow, pieces))
-            return false;
-        
-        int deltaRow = Math.abs(getRow() - newRow);
-        int deltaColumn = Math.abs(getColumn() - newColumn);
-        if(deltaRow == deltaColumn || deltaRow != 0){
-            setRow(newRow);
-            setColumn(newColumn);
-            return true;
-        }
-
-        return false;
+    public Bishop(int row, int column, boolean isWhite){
+        super(row, column, isWhite);
     }
 
     @Override
     public String getPieceName() {
-        return "Bishop";
+        return "BISHOP";
     }
 
     @Override
     public String toString() {
         return "B" + getRowLetter() + getColumn();
+    }
+
+    @Override
+    public ArrayList<Coordinates> getPossibleMoves(GameState gameState, boolean checkSafetyOn) {
+        ArrayList<Coordinates> possibleMoves = new ArrayList<>(); 
+        return possibleMoves;
     }
 }

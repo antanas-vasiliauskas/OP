@@ -1,37 +1,27 @@
-package battlechess.pieces;
+package pieces;
 import java.util.ArrayList;
+import game.GameState;
+
 
 public class Knight extends Piece {
-    @Override
-    public boolean move(int newColumn, int newRow, ArrayList<Piece> pieces) {
-        if(!super.move(newColumn, newRow, pieces))
-            return false;
-        
-        if(
-            (getColumn() == newColumn + 2 && getRow() == newRow + 1) || 
-            (getColumn() == newColumn + 2 && getRow() == newRow - 1) || 
-            (getColumn() == newColumn + 1 && getRow() == newRow + 2) || 
-            (getColumn() == newColumn + 1 && getRow() == newRow - 2) || 
-            (getColumn() == newColumn - 1 && getRow() == newRow + 2) || 
-            (getColumn() == newColumn - 1 && getRow() == newRow - 2) || 
-            (getColumn() == newColumn - 2 && getRow() == newRow + 1) || 
-            (getColumn() == newColumn - 2 && getRow() == newRow - 1) 
-        ){
-            setRow(newRow);
-            setColumn(newColumn);
-            return true;
-        }
 
-        return false;
+    public Knight(int row, int column, boolean isWhite){
+        super(row, column, isWhite);
     }
 
     @Override
     public String getPieceName() {
-        return "Knight";
+        return "KNIGHT";
     }
 
     @Override
     public String toString() {
         return "K" + getRowLetter() + getColumn();
+    }
+
+    @Override
+    public ArrayList<Coordinates> getPossibleMoves(GameState gameState, boolean checkSafetyOn) {
+        ArrayList<Coordinates> possibleMoves = new ArrayList<>(); 
+        return possibleMoves;
     }
 }

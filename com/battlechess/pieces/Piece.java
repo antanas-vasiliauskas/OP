@@ -1,7 +1,21 @@
-package battlechess.pieces;
+package pieces;
 import java.util.ArrayList;
 
-abstract public class Piece {
+import game.GameState;
+import game.Move;
+
+
+abstract public class Piece implements Cloneable{
+    
+    private Coordinates coordinates; 
+    private boolean white = true;
+
+    @Override
+    public Piece clone() throws CloneNotSupportedException {
+        Piece clonedPiece = (Piece) super.clone();
+        //clonedPiece.coordinates = this.coordinates.clone();
+        return clonedPiece;
+    }
 
     private static int piecesOnBoard = 0;
     public static int getPiecesOnBoard(){
@@ -9,21 +23,27 @@ abstract public class Piece {
     }
 
     // laukai, kuriems priega užtikrinama get/set metodais. Bent vienas laukas turi būti inicijuotas pradine reikšme.
-    private int row;
-    private int column; 
-    private boolean white = true;
 
     public int getRow(){
-        return row;
+        return coordinates.row;
     }
+
     public int getColumn() {
-        return column;
+        return coordinates.column;
     }
+
     public void setRow(int row) {
-        this.row = row;
+        this.coordinates.row = row;
     }
     public void setColumn(int column) {
-        this.column = column;
+        this.coordinates.column = column;
+    }
+
+    public Coordinates getCoordinates(){
+        return coordinates;
+    }
+    public void setCoordinates(Coordinates coordinates){
+        this.coordinates = coordinates;
     }
  
     public boolean isWhite() {
@@ -37,41 +57,49 @@ abstract public class Piece {
     public Piece(){
         this(4, 4 , true);
     }
-    public Piece(int row, int collumn, boolean isWhite){
+    public Piece(int row, int column, boolean isWhite){
         piecesOnBoard++;
-        this.row = row;
-        this.column = collumn;
+        this.coordinates = new Coordinates(row, column);
         this.white = isWhite;
-    }
-
-    // Apibrėžti metodą println(), kuris išveda objekto turinį į išvedimo srautą
-    public void println(){
-        System.out.println("type: " + getPieceName() + ", column: " + getColumn() + ", row: " + getRow() + ", isWhite: " + white);
     }
 
     // (nestatinius) metodus. Bent vienas metodas turi būti perkrautas (overloaded)
     public char getRowLetter(){
-        return (char)(this.row + 'a' - 1);
+        return (char)(this.coordinates.row + 'a' - 1);
     }
 
-    public final boolean move(int deltaRow, int deltaCollumn, boolean deltaUp, boolean deltaLeft, ArrayList<Piece> pieces){
-        int newCollumn = this.column + (deltaUp ? deltaCollumn : -deltaCollumn);
-        int newRow = this.column + (deltaLeft ? deltaRow : -deltaRow);
-        return move(newCollumn, newRow, pieces);
-    }
-
-    public boolean move(int newColumn, int newRow, ArrayList<Piece> pieces){
-        if(newColumn > 8 || newColumn < 1 || newRow > 8 || newRow < 1){
-            return false;
+    public final boolean move(Coordinates moveTo, GameState gameState){
+        ArrayList<Coordinates> cords = getPossibleMoves(gameState, true);
+        for(Coordinates c: cords){
+            if(c.row == moveTo.row && c.column == moveTo.column){
+                gameState.moves.add(new Move(new Coordinates(getRow(), getColumn()), moveTo, getPieceName()));
+                gameState.isWhiteToMove = !gameState.isWhiteToMove;
+                Piece p = getPieceOnSquare(moveTo, gameState);
+                if(p != null)
+                    gameState.pieces.remove(p);
+                else if(getPieceName() == "PAWN" && getColumn() != moveTo.column){
+                    // en passant
+                    Coordinates coo = gameState.moves.get(gameState.moves.size() - 2).afterCords;
+                    gameState.pieces.remove(getPieceOnSquare(coo, gameState));
+                }
+                setRow(moveTo.row);
+                setColumn(moveTo.column);
+                return true;
+            }
         }
-
-        for(Piece piece: pieces){
-            if(piece.white == this.white && piece.column == newColumn && piece.row == newRow)
-                return false;
-        }
-        return true;
-    }
+        return false;
+    }    
+    
 
     public abstract String getPieceName();
 
+    public abstract ArrayList<Coordinates> getPossibleMoves(GameState gameState, boolean checkSafetyOn);
+
+    public static final Piece getPieceOnSquare(Coordinates coordinates, GameState gameState){
+        for(Piece piece: gameState.pieces){
+            if(piece.getRow() == coordinates.row && piece.getColumn() == coordinates.column)
+                return piece;
+        }
+        return null;
+    }
 }
