@@ -1,8 +1,10 @@
 package game;
 
+import java.io.Serializable;
+
 import pieces.Coordinates;
 
-public class Move{
+public class Move implements Serializable{
     public Coordinates beforeCords;
     public Coordinates afterCords;
     public String pieceType;

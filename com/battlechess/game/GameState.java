@@ -1,10 +1,11 @@
 package game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pieces.*;
 
-public class GameState {
+public class GameState implements Serializable {
     public ArrayList<Piece> pieces;
     public boolean isWhiteToMove = true;
     public ArrayList<Move> moves;

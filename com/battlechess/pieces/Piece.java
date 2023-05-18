@@ -1,11 +1,12 @@
 package pieces;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import game.GameState;
 import game.Move;
 
 
-abstract public class Piece implements Cloneable{
+abstract public class Piece implements Cloneable, Serializable{
     
     private Coordinates coordinates; 
     private boolean white = true;
@@ -69,7 +70,6 @@ abstract public class Piece implements Cloneable{
     }
 
     public boolean move(Coordinates moveTo, GameState gameState){
-        
         boolean isCapture = false;
         gameState.isWhiteToMove = !gameState.isWhiteToMove;
         Piece p = getPieceOnSquare(moveTo, gameState);

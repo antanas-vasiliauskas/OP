@@ -5,10 +5,14 @@ import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Handler;
 
@@ -16,6 +20,9 @@ import pieces.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.io.OutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 
 
 
@@ -53,7 +60,7 @@ public class ChessGameGUI extends JFrame {
         
         // add action listeners to the menu items
         loadMenuItem.addActionListener(new LoadMenuItemListener());
-        saveMenuItem.addActionListener(new LoadMenuItemListener());
+        saveMenuItem.addActionListener(new SaveMenuItemListener());
         
         // add menu items to the menu and menu to the menu bar
         fileMenu.add(loadMenuItem);
@@ -232,27 +239,74 @@ public class ChessGameGUI extends JFrame {
 
     }
 
-    private void saveToFile(File file) {
-        // TODO: add implementation to save the chess game to a file
+    private void saveToFileAsync(File file, GameState gameState) {
+        Thread separateThread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    // save
+                    OutputStream fileOutputStream = new FileOutputStream(file);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                    objectOutputStream.writeObject(gameState);
+                    fileOutputStream.close();
+                    objectOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        separateThread.start();
+        try{
+            separateThread.join();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
     }
     
-    private void loadFromFile(File file) {
-        // TODO: add implementation to load the chess game from a file
+    private void loadFromFileAsync(File file, GameState gameState) {
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+            GameState newGameState = (GameState) objectIn.readObject();;
+            objectIn.close();
+            fileIn.close();
+            this.gameState = newGameState;
+            updateDisplay();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     
     private class LoadMenuItemListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(null, "bin");
             fileChooser.setFileFilter(filter);
             
             int result = fileChooser.showOpenDialog(ChessGameGUI.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 currentFile = fileChooser.getSelectedFile();
                 try {
-                    loadFromFile(currentFile);
+                    loadFromFileAsync(currentFile, gameState);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(ChessGameGUI.this, "Error loading file", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private class SaveMenuItemListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(null, "bin");
+            fileChooser.setFileFilter(filter);
+    
+            int result = fileChooser.showSaveDialog(ChessGameGUI.this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                currentFile = fileChooser.getSelectedFile();
+                try {
+                    saveToFileAsync(currentFile, gameState);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(ChessGameGUI.this, "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

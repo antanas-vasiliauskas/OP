@@ -1,6 +1,8 @@
 package pieces;
 
-public class Coordinates implements Cloneable {
+import java.io.Serializable;
+
+public class Coordinates implements Cloneable, Serializable {
     @Override
     public Coordinates clone() throws CloneNotSupportedException{
         return (Coordinates) super.clone();
