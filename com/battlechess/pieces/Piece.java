@@ -68,26 +68,36 @@ abstract public class Piece implements Cloneable{
         return (char)(this.coordinates.row + 'a' - 1);
     }
 
-    public final boolean move(Coordinates moveTo, GameState gameState){
-        ArrayList<Coordinates> cords = getPossibleMoves(gameState, true);
-        for(Coordinates c: cords){
-            if(c.row == moveTo.row && c.column == moveTo.column){
-                gameState.moves.add(new Move(new Coordinates(getRow(), getColumn()), moveTo, getPieceName()));
-                gameState.isWhiteToMove = !gameState.isWhiteToMove;
-                Piece p = getPieceOnSquare(moveTo, gameState);
-                if(p != null)
-                    gameState.pieces.remove(p);
-                else if(getPieceName() == "PAWN" && getColumn() != moveTo.column){
-                    // en passant
-                    Coordinates coo = gameState.moves.get(gameState.moves.size() - 2).afterCords;
-                    gameState.pieces.remove(getPieceOnSquare(coo, gameState));
-                }
-                setRow(moveTo.row);
-                setColumn(moveTo.column);
-                return true;
-            }
+    public boolean move(Coordinates moveTo, GameState gameState){
+        
+        boolean isCapture = false;
+        boolean isCheck = GameState.isInCheck(this, moveTo, gameState);
+        gameState.isWhiteToMove = !gameState.isWhiteToMove;
+        Piece p = getPieceOnSquare(moveTo, gameState);
+        if(p != null){
+            isCapture = true;
+            gameState.pieces.remove(p);
+            if(p.isWhite() && p.getRow() == 1 && p.getColumn() == 1 && p.getPieceName() == "ROOK")
+                gameState.canLongCastle[0] = false;
+            else if(p.isWhite() && p.getRow() == 1 && p.getColumn() == 8 && p.getPieceName() == "ROOK")
+                gameState.canShortCastle[0] = false;
+            else if(!p.isWhite() && p.getRow() == 8 && p.getColumn() == 1 && p.getPieceName() == "ROOK")
+                gameState.canLongCastle[1] = false;
+            else if(!p.isWhite() && p.getRow() == 8 && p.getColumn() == 8 && p.getPieceName() == "ROOK")
+                gameState.canShortCastle[1] = false;
+            
+
         }
-        return false;
+        else if(getPieceName() == "PAWN" && getColumn() != moveTo.column){
+            isCapture = true;
+            // en passant
+            Coordinates coo = gameState.moves.get(gameState.moves.size() - 2).afterCords;
+            gameState.pieces.remove(getPieceOnSquare(coo, gameState));
+        }
+        gameState.moves.add(new Move(new Coordinates(getRow(), getColumn()), moveTo, getPieceName(), isCapture, isCheck));
+        setRow(moveTo.row);
+        setColumn(moveTo.column);
+        return true;
     }    
     
 

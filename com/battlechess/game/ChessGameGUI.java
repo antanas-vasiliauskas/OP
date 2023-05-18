@@ -89,6 +89,10 @@ public class ChessGameGUI extends JFrame {
         movesPanel.setPreferredSize(new Dimension(300, 640));
         movesTextArea = new JTextArea("1. e4 c5");
         movesTextArea.setEditable(false);
+        movesTextArea.setWrapStyleWord(true);
+        movesTextArea.setLineWrap(true);
+        movesTextArea.setPreferredSize(new Dimension(300, 640));
+        movesTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         movesPanel.add(movesTextArea);
         
         // Create the main panel to hold the chess board and moves panel
@@ -126,7 +130,6 @@ public class ChessGameGUI extends JFrame {
         }
         for(Piece piece: gameState.pieces){
             String path = "./images/" + piece.getPieceName().toLowerCase() + "_" + (piece.isWhite() ? "white" : "black") + ".png";
-            System.out.println(path + (piece.getColumn()-1) + (piece.getRow()-1));
             ImageView imageView = new ImageView(path);
             squares[8-piece.getRow()][piece.getColumn()-1].add(imageView);
         }
@@ -137,6 +140,7 @@ public class ChessGameGUI extends JFrame {
             }
             squares[8-selectedPieceCords.row][selectedPieceCords.column-1].getComponent(0).setBackground(new Color(242, 48, 68, 150));
         }
+        movesTextArea.setText(GameState.movesToString(gameState.moves));
         
         //revalidate();
         repaint();
@@ -171,11 +175,42 @@ public class ChessGameGUI extends JFrame {
             if(cordClicked != null){
                 //"Move"    
                 pieceClicked.move(cordClicked, gameState);
+                
                 stateSelected = false;
                 possibleMoves = null;
                 selectedPieceCords = null;
                 pieceClicked = null;
                 updateDisplay();
+                if(gameState.movesAvailable() == 0){
+                    if(GameState.isInCheck(gameState)){
+                        JTextArea popUpText = new JTextArea((gameState.isWhiteToMove ? "Black" : "White") + " won.");
+                        movesTextArea.setEditable(false);
+                        movesTextArea.setWrapStyleWord(true);
+                        movesTextArea.setLineWrap(true);
+                        movesTextArea.setPreferredSize(new Dimension(300, 640));
+                        movesTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+                        JOptionPane.showMessageDialog(this, popUpText, (gameState.isWhiteToMove ? "Black" : "White") + " won.", JOptionPane.PLAIN_MESSAGE);
+                    }
+                    else{
+                        JTextArea popUpText = new JTextArea("Draw.");
+                        movesTextArea.setEditable(false);
+                        movesTextArea.setWrapStyleWord(true);
+                        movesTextArea.setLineWrap(true);
+                        movesTextArea.setPreferredSize(new Dimension(300, 640));
+                        movesTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+                        JOptionPane.showMessageDialog(this, popUpText, "Draw.", JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+                else if(gameState.pieces.size() == 2){
+                    JTextArea popUpText = new JTextArea("Draw.");
+                    movesTextArea.setEditable(false);
+                    movesTextArea.setWrapStyleWord(true);
+                    movesTextArea.setLineWrap(true);
+                    movesTextArea.setPreferredSize(new Dimension(300, 640));
+                    movesTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+                    JOptionPane.showMessageDialog(this, popUpText, "Draw.", JOptionPane.PLAIN_MESSAGE);
+                }
+                
             }
             else{
                 // "Deselect"
