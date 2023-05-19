@@ -239,6 +239,9 @@ public class ChessGameGUI extends JFrame {
 
     }
 
+
+
+
     private void saveToFileAsync(File file, GameState gameState) {
         Thread separateThread = new Thread(new Runnable() {
             public void run() {
@@ -255,13 +258,11 @@ public class ChessGameGUI extends JFrame {
             }
         });
         separateThread.start();
-        try{
-            separateThread.join();
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
+        
     }
     
+
+
     private void loadFromFileAsync(File file, GameState gameState) {
         try {
             FileInputStream fileIn = new FileInputStream(file);
