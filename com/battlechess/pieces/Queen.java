@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import game.GameState;
 
 
+/**
+ * Extended Piece class defining chess Queen behavior.
+ */
 public class Queen extends Piece {
     public Queen(int row, int column, boolean isWhite){
         super(row, column, isWhite);

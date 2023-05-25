@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import game.GameState;
 
 
+/**
+ * Extended Piece class defining chess Rook behavior.
+ */
 public class Rook extends Piece {
 
     public Rook(int row, int column, boolean isWhite){

@@ -1,5 +1,8 @@
 package pieces;
 
+/**
+ * Class dedicated to creation of Piece objects implementing Factory Design Patern.
+ */
 public class PieceFactory {
     public Piece createPiece(String type, int row, int column, boolean isWhite){
         if(type == "KING"){

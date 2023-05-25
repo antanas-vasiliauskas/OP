@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import game.GameState;
 
 
+
+/**
+ * Extended Piece class defining chess King behavior.
+ */
 public class King extends Piece {
     public King(int row, int column, boolean isWhite){
         super(row, column, isWhite);

@@ -2,6 +2,10 @@ package pieces;
 
 import java.io.Serializable;
 
+
+/**
+ * Coordinates class for storing position on chess board.
+ */
 public class Coordinates implements Cloneable, Serializable {
     @Override
     public Coordinates clone() throws CloneNotSupportedException{

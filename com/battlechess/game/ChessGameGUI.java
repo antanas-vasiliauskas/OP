@@ -1,3 +1,5 @@
+
+
 package game;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,6 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 import java.util.logging.Handler;
 
 import pieces.*;
@@ -26,6 +31,10 @@ import java.io.ObjectInputStream;
 
 
 
+/**
+ * This class is where the GUI loop runs and user interactions with GUI is handled. 
+ * This class contains main method, where new GUI window is created and is entry point to the entire program.
+ */ 
 public class ChessGameGUI extends JFrame {
 
     private JPanel mainPanel;
@@ -214,6 +223,7 @@ public class ChessGameGUI extends JFrame {
                         movesTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
                         JOptionPane.showMessageDialog(this, popUpText, "Draw.", JOptionPane.PLAIN_MESSAGE);
                     }
+                   
                 }
                 else if(gameState.pieces.size() == 2){
                     JTextArea popUpText = new JTextArea("Draw.");
@@ -223,6 +233,16 @@ public class ChessGameGUI extends JFrame {
                     movesTextArea.setPreferredSize(new Dimension(300, 640));
                     movesTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
                     JOptionPane.showMessageDialog(this, popUpText, "Draw.", JOptionPane.PLAIN_MESSAGE);
+                }
+                else{
+                    //ArrayList<Move> availableMoves = gameState.getAvailableMoves();
+                    // sort
+                    // Move bestMove = availableMoves.get(0);
+                    //Move moveToPlay = availableMoves.get(new Random().nextInt((availableMoves.size()-1) + 1));
+                     
+                    Move moveToPlay = Engine.getBestMove(gameState, 2);
+                    Piece.getPieceOnSquare(moveToPlay.beforeCords, gameState).move(moveToPlay.afterCords, gameState);
+                    updateDisplay();
                 }
                 
             }
@@ -246,19 +266,24 @@ public class ChessGameGUI extends JFrame {
         Thread separateThread = new Thread(new Runnable() {
             public void run() {
                 try {
+                    Thread.sleep(10000);
                     // save
                     OutputStream fileOutputStream = new FileOutputStream(file);
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
                     objectOutputStream.writeObject(gameState);
                     fileOutputStream.close();
                     objectOutputStream.close();
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
         separateThread.start();
-        
+        try{
+            separateThread.join();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
     }
     
 
@@ -370,5 +395,3 @@ class ClickablePanel extends JPanel {
         });
     }
 }
-
-

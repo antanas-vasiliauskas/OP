@@ -3,6 +3,9 @@ package pieces;
 import java.util.ArrayList;
 import game.GameState;
 
+/**
+ * Extended Piece class defining chess Bishop behavior.
+ */
 public class Bishop extends Piece {
     public Bishop(int row, int column, boolean isWhite){
         super(row, column, isWhite);

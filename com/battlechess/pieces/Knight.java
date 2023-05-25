@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import game.GameState;
 
 
+/**
+ * Extended Piece class defining chess Knight behavior.
+ */
 public class Knight extends Piece {
 
     public Knight(int row, int column, boolean isWhite){

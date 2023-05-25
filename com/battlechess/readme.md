@@ -1,13 +1,13 @@
 # Šachmatų žaidimas
 
 ## Paskritis
-Šachmatai yra strateginis žaidimas, kuriame dviems žaidėjams stengiantis nugalėti priešininką. Žaidžiant su 32 figūromis ant 64 laukelių lentos, tikslas yra paimti priešininko karalių.
+Šachmatai yra strateginis žaidimas dviems žaidėjams, kuriame reikia stengtis įveikti priešininką. Žaidžiama su 32 figūromis ant 64 laukelių lentos, tikslas yra nukirsti priešininko karalių.
 
 ## Paleidimas
 Paleisti programą vardu `ChessGame.jar`
 
 ## Funkcionalumas
-- Žaidimas 2 žaidėjams.
+- Žaidimas žaidžiamas prieš kompiuterinę programą.
 - Galima išsaugoti/užkrauti žaidimą.
 - Paspaudus ant figūros, rodomi langeliai, į kuriuos ji gali eiti.
 - Galimi visi ėjimai pagal tradicinės šachmatų taisykles.
@@ -20,7 +20,7 @@ Paleisti programą vardu `ChessGame.jar`
  ## Plėtimo galimybės
   - Žaidimo pradžios/pabaigos ekranas.
   - Figūrų/lentos stiliaus keitimo galimybės.
-  - Galimybė žaisti prieš kompiuterį.
+  - Galimybė žaisti prieš kitą žaidėją.
   - Galimybė analizuoti partijas.
 
   ## Projektavimo šablonai

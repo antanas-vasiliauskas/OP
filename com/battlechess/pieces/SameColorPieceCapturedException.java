@@ -1,6 +1,11 @@
 package pieces;
 
 
+
+/**
+ * Extended InvalidMoveException class defining custom behavior, when Piece.move(...)
+ * tries to capture same color piece.
+ */
 public class SameColorPieceCapturedException extends InvalidMoveException {
 
     private Piece pieceOnDestinationSquare;

@@ -1,3 +1,5 @@
+
+
 package pieces;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +8,11 @@ import game.GameState;
 import game.Move;
 
 
+
+/**
+ * This is class contains data about individual chess piece.
+ * It also implements methods related to individual chess pieces.
+ */
 abstract public class Piece implements Cloneable, Serializable{
     
     private Coordinates coordinates; 
@@ -14,7 +21,7 @@ abstract public class Piece implements Cloneable, Serializable{
     @Override
     public Piece clone() throws CloneNotSupportedException {
         Piece clonedPiece = (Piece) super.clone();
-        //clonedPiece.coordinates = this.coordinates.clone();
+        clonedPiece.coordinates = this.coordinates.clone();
         return clonedPiece;
     }
 
@@ -84,13 +91,11 @@ abstract public class Piece implements Cloneable, Serializable{
                 gameState.canLongCastle[1] = false;
             else if(!p.isWhite() && p.getRow() == 8 && p.getColumn() == 8 && p.getPieceName() == "ROOK")
                 gameState.canShortCastle[1] = false;
-            
-
         }
         else if(getPieceName() == "PAWN" && getColumn() != moveTo.column){
             isCapture = true;
             // en passant
-            Coordinates coo = gameState.moves.get(gameState.moves.size() - 2).afterCords;
+            Coordinates coo = gameState.moves.get(gameState.moves.size() - 1).afterCords;
             gameState.pieces.remove(getPieceOnSquare(coo, gameState));
         }
         int tempRow = getRow();

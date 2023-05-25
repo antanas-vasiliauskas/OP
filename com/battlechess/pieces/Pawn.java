@@ -1,6 +1,11 @@
 package pieces;
 import java.util.ArrayList;
 import game.GameState;
+
+
+/**
+ * Extended Piece class defining chess Pawn behavior.
+ */
 public class Pawn extends Piece {
     public Pawn(int row, int column, boolean isWhite){
         super(row, column, isWhite);
